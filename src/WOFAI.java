@@ -14,7 +14,7 @@ import java.util.*;
  */
 public class WOFAI extends WOFAbstractClass {
     private StringBuilder phrase;
-    public static StringBuilder hiddenPhrase;
+    private static StringBuilder hiddenPhrase;
     private int wrongAnswers;
     private static Scanner scanner = new Scanner(System.in);
     private StringBuilder previousGuesses;
@@ -23,7 +23,7 @@ public class WOFAI extends WOFAbstractClass {
     private int playerId;
     private WOFInterface player;
     public static int index = 0;
-    public ArrayList<WOFInterface> WOFPlayers;
+    private ArrayList<WOFInterface> WOFPlayers;
 
     /**
      * Default constructor that initializes a WOFAI game with a random AI player.

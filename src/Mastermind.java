@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class Mastermind extends GuessingGame {
     private static final char[] COLORS = {'R', 'G', 'B', 'Y', 'O', 'P'};
     private static final int CODE_LENGTH = 4;
-    public static int maxAttempts;
+    private static int maxAttempts;
     private static boolean allowDuplicates = false;
 
     public StringBuilder secretCode;

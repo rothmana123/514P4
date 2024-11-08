@@ -10,7 +10,7 @@ import java.util.*;
  */
 public class WOFIRandom implements WOFInterface {
     /** The unique player ID for this instance. */
-    public int playerId;
+    private int playerId;
 
     /**
      * Constructor for WOFIRandom. It generates a new unique player ID by
