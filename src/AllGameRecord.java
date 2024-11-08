@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class AllGameRecord {
-    private static ArrayList<GameRecord> listOfGameRecords;
-    private static int playerId = 0;
+    public static ArrayList<GameRecord> listOfGameRecords;
+    public static int playerId = 0;
 
     //constructor
     public AllGameRecord(){
