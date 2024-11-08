@@ -255,9 +255,18 @@ public class WOFAI extends WOFAbstractClass {
         AllGameRecord allGames = new AllGameRecord();
         while (true) {
             System.out.println("Choose your AI Game:");
-            System.out.println("1. for Default 2. to Choose 3. to auto-Play all 3 Players 4. exit");
+            System.out.println("0. for User WOF 1. for Default 2. to Choose 3. to auto-Play all 3 Players 4. Mastermind 5. Averages");
             gametype = gameTypeScanner.nextInt();
-            if (gametype == 1) {
+            if (gametype == 0){
+                WOFUserGame game = new WOFUserGame(allGames);
+                game.playAll();
+
+                // Print all game records for verification
+                System.out.println("All games played:");
+                for(GameRecord record : allGames.listOfGameRecords) {
+                    System.out.println("Player ID: " + record.playerId + ", Score: " + record.score);
+                }
+            }else if (gametype == 1) {
                 //default player
                 WOFAI game = new WOFAI(allGames);
 
@@ -306,12 +315,27 @@ public class WOFAI extends WOFAbstractClass {
                 for (GameRecord record : allGames.listOfGameRecords) {
                     System.out.println("Player ID: " + record.playerId + ", Score: " + record.score);
                 }
+            } else if(gametype == 4) {
+                Mastermind game = new Mastermind(allGames);
+                //System.out.println(game.secretCode);
+
+                game.playAll();
+
+                // Print all game records for verification
+                System.out.println("All games played:");
+                for (GameRecord record : allGames.listOfGameRecords) {
+                    System.out.println("Player ID: " + record.playerId + ", Score: " + record.score);
+                }
+            }
+            else {
                 System.out.println("The average of all scores is " + AllGameRecord.average(allGames.listOfGameRecords));
-                System.out.println("The average of all scores for Player 4 is " + AllGameRecord.playerAverage(4));
-                System.out.println("The first 5 high scores are " + AllGameRecord.highGameList(allGames.listOfGameRecords, 5));
-                System.out.println("The 2 highest scores for player 5 are " + AllGameRecord.highGameListPlayer(5, allGames.listOfGameRecords, 2));
-            } else {
-                exit(-1);
+                int totalGames = AllGameRecord.getPlayerId();
+                int numberGames = totalGames/2;
+                System.out.println("The first " + numberGames + " high scores are " + AllGameRecord.highGameList(allGames.listOfGameRecords, numberGames));
+                System.out.println("which player would you like to see the highest and average scores for 1-" + totalGames);
+                int player = gameTypeScanner.nextInt();
+                System.out.println("The average of all scores for Player " + player + " is " + AllGameRecord.playerAverage(player));
+                System.out.println("The highest score for player " + player + " is " + AllGameRecord.highGameListPlayer(player, allGames.listOfGameRecords, 1));
             }
         }
     }

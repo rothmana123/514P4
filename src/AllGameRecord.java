@@ -54,7 +54,7 @@ public class AllGameRecord {
         arrayOfGames.sort((game1, game2) -> Integer.compare(game2.score, game1.score));
 
         // Ensures we don't exceed the list size if n is greater than arrayOfGames size
-        // n = Math.min(n, arrayOfGames.size());
+        n = Math.min(n, arrayOfGames.size());
         return new ArrayList<>(arrayOfGames.subList(0, n));
         //return arrayOfGames;
     }
