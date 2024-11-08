@@ -1,10 +1,7 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * The WOFUserGame class represents a user-interactive version of a Wheel of Fortune-style game.
@@ -257,5 +254,30 @@ public class WOFUserGame extends WOFAbstractClass {
         for (GameRecord record : allGames.listOfGameRecords) {
             System.out.println("Player ID: " + record.playerId + ", Score: " + record.score);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WOFUserGame that)) return false;
+        return playerId == that.playerId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(playerId);
+    }
+
+    @Override
+    public String toString() {
+        return "WOFUserGame{" +
+                "phrase=" + phrase +
+                ", hiddenPhrase=" + hiddenPhrase +
+                ", wrongAnswers=" + wrongAnswers +
+                ", previousGuesses=" + previousGuesses +
+                ", phrases=" + phrases +
+                ", allGameRecords=" + allGameRecords +
+                ", playerId=" + playerId +
+                '}';
     }
 }

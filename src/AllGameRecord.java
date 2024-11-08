@@ -15,6 +15,12 @@ public class AllGameRecord {
     public static ArrayList<GameRecord> listOfGameRecords;
     public static int playerId = 0;
 
+    @Override
+    public String toString() {
+        return "AllGameRecord{}";
+    }
+
+
     //constructor
     public AllGameRecord(){
         listOfGameRecords = new ArrayList<GameRecord>();

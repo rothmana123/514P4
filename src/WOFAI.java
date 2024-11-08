@@ -23,6 +23,33 @@ public class WOFAI extends WOFAbstractClass {
     private int playerId;
     private WOFInterface player;
     public static int index = 0;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WOFAI wofai)) return false;
+        return playerId == wofai.playerId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(playerId);
+    }
+
+    @Override
+    public String toString() {
+        return "WOFAI{" +
+                "phrase=" + phrase +
+                ", wrongAnswers=" + wrongAnswers +
+                ", previousGuesses=" + previousGuesses +
+                ", phrases=" + phrases +
+                ", allGameRecords=" + allGameRecords +
+                ", playerId=" + playerId +
+                ", player=" + player +
+                ", WOFPlayers=" + WOFPlayers +
+                '}';
+    }
+
     private ArrayList<WOFInterface> WOFPlayers;
 
     /**

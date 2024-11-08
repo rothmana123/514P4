@@ -12,6 +12,25 @@ public class WOFIRandom implements WOFInterface {
     /** The unique player ID for this instance. */
     private int playerId;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WOFIRandom that)) return false;
+        return playerId == that.playerId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(playerId);
+    }
+
+    @Override
+    public String toString() {
+        return "WOFIRandom{" +
+                "playerId=" + playerId +
+                '}';
+    }
+
     /**
      * Constructor for WOFIRandom. It generates a new unique player ID by
      * calling AllGameRecord and assigns it to this instance.
