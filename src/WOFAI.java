@@ -376,6 +376,23 @@ public class WOFAI extends WOFAbstractClass {
                 for (GameRecord record : allGames.listOfGameRecords) {
                     System.out.println("Player ID: " + record.playerId + ", Score: " + record.score);
                 }
+                int totalPlayers = 3; // Assuming three players, each with three games
+
+                System.out.println("High Scores for Each Player:");
+                for (int player = 1; player <= totalPlayers; player++) {
+                    System.out.println("Player " + player + " high scores: " + AllGameRecord.highGameListPlayer(player, allGames.listOfGameRecords, 3));
+                }
+
+// Display the average score across all nine games
+                float overallAverage = AllGameRecord.average(allGames.listOfGameRecords);
+                System.out.println("The average score across all nine games is: " + overallAverage);
+
+// Display the average score for each player individually
+                System.out.println("Average Scores for Each Player:");
+                for (int player = 1; player <= totalPlayers; player++) {
+                    float playerAverage = AllGameRecord.playerAverage(player);
+                    System.out.println("The average score for Player " + player + " is: " + playerAverage);
+                }
             } else if(gametype == 4) {
                 Mastermind game = new Mastermind(allGames);
                 //System.out.println(game.secretCode);

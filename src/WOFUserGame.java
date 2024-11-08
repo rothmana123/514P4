@@ -240,32 +240,11 @@ public class WOFUserGame extends WOFAbstractClass {
         return phrase.toString().equals(hiddenPhrase.toString());
     }
 
-    /**
-     * Main method to run the WOFUserGame. Initializes the game and plays all rounds.
-     *
-     * @param args command-line arguments (not used)
-     */
-    public static void main(String[] args) {
-        AllGameRecord allGames = new AllGameRecord();
-        WOFUserGame game = new WOFUserGame(allGames);
-        game.playAll();
-
-        System.out.println("All games played:");
-        for (GameRecord record : allGames.listOfGameRecords) {
-            System.out.println("Player ID: " + record.playerId + ", Score: " + record.score);
-        }
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof WOFUserGame that)) return false;
         return playerId == that.playerId;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(playerId);
     }
 
     @Override
@@ -280,4 +259,24 @@ public class WOFUserGame extends WOFAbstractClass {
                 ", playerId=" + playerId +
                 '}';
     }
+    /**
+     * Main method to run the WOFUserGame. Initializes the game and plays all rounds.
+     *
+     * @param args command-line arguments (not used)
+     */
+    public static void main(String[] args) {
+        AllGameRecord allGames = new AllGameRecord();
+        WOFUserGame game = new WOFUserGame(allGames);
+        game.playAll();
+
+        System.out.println("All games played:");
+        for (GameRecord record : allGames.listOfGameRecords) {
+            System.out.println("Player ID: " + record.playerId + ", Score: " + record.score);
+        }
+        System.out.println("The average of all scores is " + AllGameRecord.average(allGames.listOfGameRecords));
+        System.out.println("The 2 highest scores are " + AllGameRecord.highGameList(allGames.listOfGameRecords, 2));
+
+    }
+
+
 }

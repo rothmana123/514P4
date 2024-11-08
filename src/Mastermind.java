@@ -273,5 +273,8 @@ public class Mastermind extends GuessingGame {
         for (GameRecord record : allGameRecords.listOfGameRecords) {
             System.out.println("Player ID: " + record.playerId + ", Score: " + record.score);
         }
+        System.out.println("The average of all scores is " + AllGameRecord.average(allGameRecords.listOfGameRecords));
+        System.out.println("The 2 highest scores are " + AllGameRecord.highGameList(allGameRecords.listOfGameRecords, 2));
+
     }
 }
