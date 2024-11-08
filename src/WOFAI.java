@@ -3,38 +3,36 @@ import java.util.Scanner;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
 import java.util.*;
 
-import static java.lang.System.exit;
-
+/**
+ * The WOFAI class extends WOFAbstractClass to implement a Wheel of Fortune-style AI game.
+ * This class manages various AI strategies for guessing, tracks the game state, and records scores.
+ *
+ * <p>The WOFAI class provides constructors to initialize different AI players or player lists,
+ * allowing for customized gameplay configurations.</p>
+ */
 public class WOFAI extends WOFAbstractClass {
     private StringBuilder phrase;
     public static StringBuilder hiddenPhrase;
     private int wrongAnswers;
     private static Scanner scanner = new Scanner(System.in);
     private StringBuilder previousGuesses;
-
-    //list of answers
     private List<String> phrases;
-
     private AllGameRecord allGameRecords;
     private int playerId;
-
-    //how can I pass in a default AI player?
     private WOFInterface player;
-    //private WOFIVowelFirst player;
     public static int index = 0;
-
     public ArrayList<WOFInterface> WOFPlayers;
 
-    //default constructor
+    /**
+     * Default constructor that initializes a WOFAI game with a random AI player.
+     *
+     * @param allGameRecords the AllGameRecord instance that manages all game records
+     */
     public WOFAI(AllGameRecord allGameRecords) {
         System.out.println("This is the default implementation with WOFI Random");
         this.player = new WOFIRandom();
-        //this.player = new WOFIVowelFirst();
         this.phrases = readPhrases();
         resetGame();
         this.playerId = player.playerId();
@@ -43,10 +41,15 @@ public class WOFAI extends WOFAbstractClass {
         playAll(player);
     }
 
-    //constructor allows user to choose the player
+    /**
+     * Constructor that allows the user to choose a specific AI player.
+     *
+     * @param allGameRecords the AllGameRecord instance that manages all game records
+     * @param player the chosen WOFInterface player
+     */
     public WOFAI(AllGameRecord allGameRecords, WOFInterface player) {
-        System.out.println("This is implementation allows user to choose Concrete WOF Interface Implementation");
-        //this.player = player;
+        System.out.println("This implementation allows user to choose Concrete WOF Interface Implementation");
+        this.player = player;
         this.phrases = readPhrases();
         resetGame();
         this.playerId = player.playerId();
@@ -55,34 +58,44 @@ public class WOFAI extends WOFAbstractClass {
         playAll(player);
     }
 
-    // and one should accept a list of WheellOfFortunePlayers.
-    //constructor allows user to choose the player
+    /**
+     * Constructor that allows the user to initialize a list of AI players.
+     * Each AI player will play all available phrases, generating unique records.
+     *
+     * @param allGameRecords the AllGameRecord instance that manages all game records
+     * @param WOFPlayers the list of AI players implementing WOFInterface
+     */
     public WOFAI(AllGameRecord allGameRecords, ArrayList<WOFInterface> WOFPlayers) {
         System.out.println("This implementation runs a list of Concrete WOF Interface Implementations");
         this.WOFPlayers = WOFPlayers;
         this.phrases = readPhrases();
         resetGame();
-        //this.playerId = player.playerId();
         this.allGameRecords = allGameRecords;
-        //System.out.println("The default playerId is " + playerId);
+
         for (WOFInterface player : WOFPlayers) {
             this.playerId = player.playerId();
-            playAll(player);
-            this.phrases = readPhrases();// Play all games for the current player
+            playAll(player); // Play all games for the current player
+            this.phrases = readPhrases(); // Reload phrases for the next player
             resetGame();
         }
     }
 
+    /**
+     * Resets the game state, initializing a new phrase, hidden phrase, and resetting wrong answers and previous guesses.
+     */
     public void resetGame() {
-        // Reset fields for a new game
         this.phrase = randomPhrase();
         this.hiddenPhrase = generateHiddenPhrase(phrase);
         this.wrongAnswers = 10;
-        //this.previousGuesses.setLength(0); // Clear previous guesses
         this.previousGuesses = new StringBuilder("");
     }
 
-    //    @Override
+    /**
+     * Plays the game with the specified AI player and resets the game for each new phrase.
+     *
+     * @param player the AI player to play the game
+     * @return AllGameRecord containing all game records
+     */
     public AllGameRecord playAll(WOFInterface player) {
         while (true) {
             System.out.println("Current playerId: " + playerId);
@@ -93,25 +106,22 @@ public class WOFAI extends WOFAbstractClass {
                 break;
             }
         }
-        //should make a diagram of how all the methods modify allGameRecords to track data flow
         return allGameRecords;
     }
 
-    //refactor to call play() on WOFI object
+    /**
+     * Plays a single game for the provided AI player, handling guessing, win/loss conditions, and score recording.
+     *
+     * @param player the AI player to play the game
+     */
     public void play(WOFInterface player) {
         WOFAI.index = 0;
         System.out.println(hiddenPhrase.toString());
         while (true) {
-            //get user guess
-            System.out.println();
             String guess = player.getGuess(previousGuesses);
             System.out.println("Player guessed " + guess);
-
-            //keep track of wrong answers and adapt hiddePhrase
             processGuess(guess);
-            //System.out.println(hiddenPhrase);
 
-            //check win condition
             if (checkWin()) {
                 System.out.println("You won!");
                 recordGame(true);
@@ -124,37 +134,42 @@ public class WOFAI extends WOFAbstractClass {
         }
     }
 
-    @Override
-    public AllGameRecord playAll() {
-        return null;
-    }
-
-    @Override
-    public void play() {
-    }
-
-    //Play Next for Default AI
-    @Override
-    public boolean playNext() {
-        return phrases.size() > 0;
-    }
-
+    /**
+     * Checks whether the player has successfully guessed the phrase.
+     *
+     * @return true if the player has won, false otherwise
+     */
     public Boolean checkWin() {
-        return (phrase.toString().equals(hiddenPhrase.toString()));
+        return phrase.toString().equals(hiddenPhrase.toString());
     }
 
+    /**
+     * Records the game result, storing it in AllGameRecord with a calculated score based on game outcome.
+     *
+     * @param won true if the player won, false if the player lost
+     */
     private void recordGame(boolean won) {
         int score = calculateScore(won);
         GameRecord gameRecord = new GameRecord(score, playerId);
-        System.out.println(gameRecord.score);
         allGameRecords.add(gameRecord);
         System.out.println("Game recorded with score: " + score);
     }
 
+    /**
+     * Calculates the score for the game based on whether the player won.
+     *
+     * @param won true if the player won, false if the player lost
+     * @return the calculated score as an integer
+     */
     private int calculateScore(boolean won) {
         return won ? wrongAnswers * 10 : 0;
     }
 
+    /**
+     * Reads phrases from an external file ("phrases.txt") to use in the game.
+     *
+     * @return a List of phrases as strings
+     */
     @Override
     public List<String> readPhrases() {
         List<String> phraseList = new ArrayList<>();
@@ -166,6 +181,11 @@ public class WOFAI extends WOFAbstractClass {
         return phraseList;
     }
 
+    /**
+     * Selects a random phrase from the list of phrases and removes it from the list.
+     *
+     * @return the randomly selected phrase as a StringBuilder
+     */
     @Override
     public StringBuilder randomPhrase() {
         if (phrases.isEmpty()) {
@@ -175,24 +195,29 @@ public class WOFAI extends WOFAbstractClass {
 
         Random random = new Random();
         int index = random.nextInt(phrases.size());
-        String selectedPhrase = phrases.remove(index); // Select and remove the phrase
+        String selectedPhrase = phrases.remove(index);
         return new StringBuilder(selectedPhrase);
     }
 
+    /**
+     * Generates a hidden version of the phrase, replacing each character with an asterisk, except for spaces.
+     *
+     * @param phrase the original phrase to conceal
+     * @return the concealed phrase as a StringBuilder
+     */
     public StringBuilder generateHiddenPhrase(StringBuilder phrase) {
         StringBuilder hiddenPhrase = new StringBuilder();
-        char letter;
         for (int i = 0; i < phrase.length(); i++) {
-            letter = phrase.charAt(i);
-            if (letter == ' ') {
-                hiddenPhrase.append(' ');
-            } else {
-                hiddenPhrase.append("*");
-            }
+            hiddenPhrase.append(phrase.charAt(i) == ' ' ? ' ' : "*");
         }
         return hiddenPhrase;
     }
 
+    /**
+     * Processes the player's guess, updating the hidden phrase if the guessed letter is present or decrementing wrong answers if not.
+     *
+     * @param guess the guessed letter as a string
+     */
     public void processGuess(String guess) {
         String checkLetter = guess.substring(0, 1);
         if (phrase.indexOf(checkLetter) != -1) {
@@ -203,10 +228,16 @@ public class WOFAI extends WOFAbstractClass {
             }
         } else {
             wrongAnswers--;
-            System.out.println("Nope.  Wrong Answers left: " + wrongAnswers);
+            System.out.println("Nope. Wrong Answers left: " + wrongAnswers);
         }
     }
 
+    /**
+     * Gets a letter guess from the player, ensuring it hasn’t been guessed before and is a valid letter.
+     *
+     * @param previousGuesses a StringBuilder containing letters that have already been guessed
+     * @return the guessed letter as a string
+     */
     @Override
     public String getGuess(StringBuilder previousGuesses) {
         while (true) {
@@ -215,39 +246,42 @@ public class WOFAI extends WOFAbstractClass {
             System.out.println("Guess a Letter");
             String guessString = scanner.nextLine().toLowerCase();
 
-            // Check to make sure input is 1 character
-            if (!(guessString.length() == 1)) {
-                System.out.println("Please enter only 1 letter");
+            if (guessString.length() != 1 || !Character.isLetter(guessString.charAt(0)) || previousGuesses.indexOf(guessString) != -1) {
+                System.out.println("Invalid guess. Please enter a single unused letter.");
                 continue;
             }
 
-            //make sure letter has not been guessed already
-            if (previousGuesses.indexOf(guessString) != -1) {
-                System.out.println("You already guess that letter");
-                System.out.println();
-                continue;
-            } else {
-                previousGuesses.append(guessString);
-            }
-
-            //change String to Char
-            char guessLetter = guessString.charAt(0);
-
-            //Check to make sure entry is a letter
-            if (!Character.isLetter(guessLetter)) {
-                System.out.println("Only guess a letter");
-                continue;
-            }
-
-            //convert back to String
-            return Character.toString(guessLetter);
-            ///next move is to process guessLetter through Process Guess
+            previousGuesses.append(guessString);
+            return guessString;
         }
     }
 
+    /**
+     * Retrieves the current hidden phrase.
+     *
+     * @return the hidden phrase as a StringBuilder
+     */
     public static StringBuilder getHiddenPhrase() {
         return hiddenPhrase;
     }
+
+ @Override
+    public AllGameRecord playAll() {
+        return null;
+    }
+
+    //not going to use bc I need to pass in the WOFI object
+    @Override
+    public void play() {
+    }
+
+    //Play Next for Default AI
+    @Override
+    public boolean playNext() {
+        return phrases.size() > 0;
+    }
+
+    //Main method to launch the WOF Players
 
     public static void main(String[] args) {
         int gametype;
@@ -330,8 +364,8 @@ public class WOFAI extends WOFAbstractClass {
             else {
                 System.out.println("The average of all scores is " + AllGameRecord.average(allGames.listOfGameRecords));
                 int totalGames = AllGameRecord.getPlayerId();
-                int numberGames = totalGames/2;
-                System.out.println("The first " + numberGames + " high scores are " + AllGameRecord.highGameList(allGames.listOfGameRecords, numberGames));
+                //int numberGames = totalGames/2;
+                System.out.println("The 2 highest scores are " + AllGameRecord.highGameList(allGames.listOfGameRecords, 2));
                 System.out.println("which player would you like to see the highest and average scores for 1-" + totalGames);
                 int player = gameTypeScanner.nextInt();
                 System.out.println("The average of all scores for Player " + player + " is " + AllGameRecord.playerAverage(player));

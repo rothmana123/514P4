@@ -1,3 +1,12 @@
+/**
+ * The AllGameRecord class is responsible for managing a list of game records.
+ * It provides methods to add game records, generate unique player IDs,
+ * calculate average scores, and retrieve top scores.
+ *
+ * <p>This class serves as a central storage and utility for processing
+ * information about multiple games and players.</p>
+ */
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
